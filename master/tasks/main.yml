@@ -90,4 +90,26 @@
         
       - name: Storing token into a file dest at /root/token.sh 
         local_action: copy content={{ token.stdout_lines[0] }} dest=/root/token.sh
+        
+      - name: Copying mysql-database.yml file
+        copy:
+              src: database.yaml
+              dest: /root
+       
+      - name: Copying wordpress.yml file
+        copy:
+               src: wordpress.yml
+               dest: /root
+
+      - shell: "kubectl apply -f /root/database.yaml"
+        register: mysql
+
+      - shell: "kubectl apply -f /root/wordpress.yml"
+        register: wordpress
+
+      - debug:
+           msg: "{{ mysql }}"
+
+       - debug:
+            msg: "{{ wordpress }}"   
 
